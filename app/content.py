@@ -303,8 +303,10 @@ def _dimensions() -> dict:
     return dims
 
 
-def _photos(order, label):
+def _photos(order, label, focus=None):
+    """focus maps a slug to a CSS object-position, used where a tile is cropped."""
     dims = _dimensions()
+    focus = focus or {}
     out = []
     for i, slug in enumerate(order, start=1):
         w, h = dims.get(slug, (1600, 1067))
@@ -315,6 +317,7 @@ def _photos(order, label):
                 "thumb_w": 640,
                 "thumb_h": round(640 * h / w),
                 "alt": f"{label}, photo {i} of {len(order)}",
+                "focus": focus.get(slug, "50% 50%"),
             }
         )
     return out
@@ -322,4 +325,9 @@ def _photos(order, label):
 
 GALLERY_PHOTOS = _photos(_GALLERY_ORDER, "101 Marina on Lake Norfork")
 STORE_PHOTOS = _photos(_STORE_ORDER, "Inside the 101 Marina store")
-HOME_PHOTOS = _photos(["dsc01259", "dsc-0836", "dsc01383", "dsc-0005", "dsc01222", "dsc-0975"], "101 Marina on Lake Norfork")
+# Home page strip: 8 photos shown as equal tiles (cropped to 4:3), 4 across on desktop.
+HOME_PHOTOS = _photos(
+    ["dsc01259", "dsc-0836", "dsc-0819", "dsc-0005", "dsc01383", "dsc01222", "dsc01416", "dsc-0975"],
+    "101 Marina on Lake Norfork",
+    focus={"dsc01222": "50% 32%", "dsc01416": "50% 28%"},  # gas pump gauges, boy's face
+)

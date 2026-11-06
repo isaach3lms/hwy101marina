@@ -50,7 +50,7 @@
 <section class="section">
   <div class="wrap">
     <h2 class="section-title">Around the marina</h2>
-    {{ photo_grid(asset, photos) }}
+    {{ photo_grid(asset, photos, uniform=true) }}
     <p class="center"><a class="btn btn-indigo" href="{{ url_for('site.gallery') }}">View the full gallery</a></p>
   </div>
 </section>

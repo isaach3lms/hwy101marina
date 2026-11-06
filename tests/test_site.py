@@ -44,6 +44,16 @@ def test_mobile_nav_is_a_side_drawer(client):
     assert "translateX(100%)" in css
 
 
+def test_home_photo_strip_is_eight_equal_tiles(client):
+    assert len(content.HOME_PHOTOS) == 8
+    html = client.get("/").get_data(as_text=True)
+    assert "photo-grid--uniform" in html and html.count('class="photo-btn"') == 8
+    css = (ROOT / "app/static/css/site.css").read_text()
+    assert "aspect-ratio:4/3" in css and "object-fit:cover" in css
+    # Gallery and store keep their natural-size layout.
+    assert "photo-grid--uniform" not in client.get("/gallery/").get_data(as_text=True)
+
+
 def test_footer_has_no_agency_credit(client):
     for path in PAGES:
         assert "Site by" not in client.get(path).get_data(as_text=True)

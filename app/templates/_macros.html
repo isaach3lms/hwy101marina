@@ -24,12 +24,12 @@
 <span class="icon-tile"><img src="{{ asset('img/icons/' ~ icon) }}" width="40" height="40" alt="" loading="lazy"></span>
 {%- endmacro %}
 
-{% macro photo_grid(asset, photos) -%}
-<ul class="photo-grid" data-lightbox>
+{% macro photo_grid(asset, photos, uniform=false) -%}
+<ul class="photo-grid{% if uniform %} photo-grid--uniform{% endif %}" data-lightbox>
   {% for p in photos %}
   <li>
     <button type="button" class="photo-btn" data-full="{{ asset(p.full) }}" data-alt="{{ p.alt }}" aria-label="Open photo {{ loop.index }} of {{ loop.length }}">
-      <img src="{{ asset(p.thumb) }}" width="{{ p.thumb_w }}" height="{{ p.thumb_h }}" alt="{{ p.alt }}" loading="{{ 'eager' if loop.index <= 3 else 'lazy' }}" decoding="async">
+      <img src="{{ asset(p.thumb) }}"{% if uniform %} style="object-position:{{ p.focus }}"{% endif %} width="{{ p.thumb_w }}" height="{{ p.thumb_h }}" alt="{{ p.alt }}" loading="{{ 'eager' if loop.index <= 3 else 'lazy' }}" decoding="async">
     </button>
   </li>
   {% endfor %}
