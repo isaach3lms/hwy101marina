@@ -25,7 +25,8 @@ NAV = [
     {"label": "Campground", "endpoint": "site.campground"},
     {"label": "Our Store", "endpoint": "site.store"},
     {"label": "Photo Gallery", "endpoint": "site.gallery"},
-    {"label": "Contact", "endpoint": "site.contact"},
+    # Hidden unless CONTACT_ENABLED is true (see config.py).
+    {"label": "Contact", "endpoint": "site.contact", "requires": "contact"},
 ]
 
 # Old WordPress paths mapped to the new URLs. Served as 301s so existing

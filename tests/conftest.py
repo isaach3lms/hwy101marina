@@ -3,6 +3,12 @@ import pytest
 from app import create_app
 
 
+@pytest.fixture(autouse=True)
+def contact_enabled(monkeypatch):
+    """Contact page is off in production for now; keep its code covered by default."""
+    monkeypatch.setenv("CONTACT_ENABLED", "true")
+
+
 @pytest.fixture()
 def app():
     return create_app(

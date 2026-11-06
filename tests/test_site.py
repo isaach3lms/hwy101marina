@@ -227,6 +227,55 @@ def test_csrf_enforced_when_enabled():
     post.assert_not_called()
 
 
+# ---- contact page switched off (the production default) ---------------------
+
+@pytest.fixture()
+def off_client(monkeypatch):
+    monkeypatch.delenv("CONTACT_ENABLED", raising=False)
+    return create_app({"TESTING": True, "SECRET_KEY": "t", "WTF_CSRF_ENABLED": False}).test_client()
+
+
+def test_contact_off_by_default_in_config(monkeypatch):
+    monkeypatch.delenv("CONTACT_ENABLED", raising=False)
+    assert create_app({"TESTING": True, "SECRET_KEY": "t"}).config["CONTACT_ENABLED"] is False
+
+
+def test_contact_off_hides_nav_and_sitemap(off_client):
+    for path in ["/", "/rentals/", "/campground/", "/store/", "/gallery/"]:
+        html = off_client.get(path).get_data(as_text=True)
+        assert 'href="/contact/"' not in html, path
+        assert "tel:+18704675252" in html
+    sm = off_client.get("/sitemap.xml").get_data(as_text=True)
+    assert "/contact/" not in sm and "/rentals/" in sm
+
+
+def test_contact_off_redirects_home_without_sending(monkeypatch):
+    monkeypatch.delenv("CONTACT_ENABLED", raising=False)
+    app = create_app({"TESTING": True, "SECRET_KEY": "t", "WTF_CSRF_ENABLED": False,
+                      "RESEND_API_KEY": "re_test", "MAIL_FROM": "a@b.co", "MAIL_TO": ["x@y.co"]})
+    c = app.test_client()
+    for path in ("/contact/", "/contact/thanks/"):
+        r = c.get(path)
+        assert r.status_code == 302 and r.headers["Location"] == "/"
+    with patch("app.mail.requests.post") as post:
+        r = c.post("/contact/", data=GOOD)
+    assert r.status_code == 302 and r.headers["Location"] == "/"
+    post.assert_not_called()
+
+
+def test_contact_off_csrf_failure_redirects_home(monkeypatch):
+    monkeypatch.delenv("CONTACT_ENABLED", raising=False)
+    app = create_app({"TESTING": True, "SECRET_KEY": "t", "WTF_CSRF_ENABLED": True})
+    r = app.test_client().post("/contact/", data=GOOD)
+    assert r.status_code == 302 and r.headers["Location"] == "/"
+
+
+def test_every_page_has_a_call_cta(off_client):
+    for path in ["/", "/rentals/", "/campground/", "/store/"]:
+        html = off_client.get(path).get_data(as_text=True)
+        assert "tel:+18704675252" in html and "cta-band" in html, path
+
+
 # ---- web3forms (browser-side delivery) -------------------------------------
 
 def test_web3forms_off_by_default(client):

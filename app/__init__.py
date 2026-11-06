@@ -1,7 +1,7 @@
 import os
 from datetime import datetime, timezone
 
-from flask import Flask, render_template, request, url_for
+from flask import Flask, redirect, render_template, request, url_for
 from flask_wtf.csrf import CSRFError, CSRFProtect
 from werkzeug.middleware.proxy_fix import ProxyFix
 
@@ -44,7 +44,10 @@ def create_app(overrides: dict | None = None) -> Flask:
 
         return {
             "site": content.SITE,
-            "nav": content.NAV,
+            "nav": [
+                n for n in content.NAV
+                if n.get("requires") != "contact" or app.config["CONTACT_ENABLED"]
+            ],
             "brand": brand.BRAND,
             "brand_css": brand.css_tokens(),
             "asset": asset,
@@ -76,6 +79,8 @@ def create_app(overrides: dict | None = None) -> Flask:
     @app.errorhandler(CSRFError)
     def csrf_failed(_e):
         # An expired or missing form token: show the form again with a plain message.
+        if not app.config["CONTACT_ENABLED"]:
+            return redirect(url_for("site.home"))
         from .forms import ContactForm
         from .routes import render_page
 

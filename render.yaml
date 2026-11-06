@@ -18,6 +18,9 @@ services:
         generateValue: true
       - key: SITE_URL
         value: https://www.hwy101marina.com
+      # Contact page is off for now (call to action is the phone number). Set to true to bring it back.
+      - key: CONTACT_ENABLED
+        value: "false"
       # Web3Forms access key. Public by design (it is embedded in the page). Paste it in the dashboard.
       - key: WEB3FORMS_ACCESS_KEY
         sync: false

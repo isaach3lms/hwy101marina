@@ -1,7 +1,9 @@
 # 101 Marina
 
 Flask rebuild of hwy101marina.com, migrated off WordPress (Elementor) to Render.
-Six pages: Home, Rentals, Campground, Our Store, Photo Gallery, Contact.
+Five live pages: Home, Rentals, Campground, Our Store, Photo Gallery. Every call to action is the phone number.
+
+The Contact page is built but switched off (`CONTACT_ENABLED=false` in `render.yaml`). To bring it back, set `CONTACT_ENABLED` to `true` in the Render Environment tab and redeploy. The nav link, sitemap entry and form return with no code change. While off, `/contact/` redirects to the home page.
 
 ## Where things live
 

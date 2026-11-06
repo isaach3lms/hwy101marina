@@ -86,6 +86,9 @@ def gallery():
 
 @bp.route("/contact/", methods=["GET", "POST"])
 def contact():
+    if not current_app.config["CONTACT_ENABLED"]:
+        # Temporary redirect (not 301) so the page can come back without stale caches.
+        return redirect(url_for("site.home"))
     form = ContactForm()
     error = None
     if form.validate_on_submit():
@@ -117,6 +120,8 @@ def contact():
 
 @bp.get("/contact/thanks/")
 def contact_thanks():
+    if not current_app.config["CONTACT_ENABLED"]:
+        return redirect(url_for("site.home"))
     return render_page("thanks.html", "thanks", c=content.CONTACT)
 
 
@@ -135,7 +140,11 @@ def robots():
 @bp.get("/sitemap.xml")
 def sitemap():
     base = current_app.config["SITE_URL"]
-    urls = [p["path"] for k, p in content.PAGES.items() if not p.get("noindex")]
+    enabled = current_app.config["CONTACT_ENABLED"]
+    urls = [
+        p["path"] for k, p in content.PAGES.items()
+        if not p.get("noindex") and (enabled or k != "contact")
+    ]
     xml = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     xml += [f"  <url><loc>{base}{path}</loc></url>" for path in urls]
     xml.append("</urlset>")
