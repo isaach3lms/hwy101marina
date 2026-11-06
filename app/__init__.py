@@ -50,6 +50,7 @@ def create_app(overrides: dict | None = None) -> Flask:
             "asset": asset,
             "year": datetime.now(timezone.utc).year,
             "site_url": app.config["SITE_URL"],
+            "web3forms_key": app.config["WEB3FORMS_ACCESS_KEY"],
         }
 
     @app.after_request
@@ -58,11 +59,14 @@ def create_app(overrides: dict | None = None) -> Flask:
         resp.headers.setdefault("X-Frame-Options", "DENY")
         resp.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
         resp.headers.setdefault("Permissions-Policy", "camera=(), microphone=(), geolocation=()")
+        connect = "'self'"
+        if app.config["WEB3FORMS_ACCESS_KEY"]:
+            connect += " https://api.web3forms.com"
         resp.headers.setdefault(
             "Content-Security-Policy",
             "default-src 'self'; img-src 'self' data:; "
             "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
-            "font-src https://fonts.gstatic.com; script-src 'self'; "
+            f"font-src https://fonts.gstatic.com; script-src 'self'; connect-src {connect}; "
             "form-action 'self'; frame-ancestors 'none'; base-uri 'self'",
         )
         if app.config["IS_PRODUCTION"]:

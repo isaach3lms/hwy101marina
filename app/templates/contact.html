@@ -8,7 +8,8 @@
 
 <section class="section">
   <div class="wrap split">
-    <form class="card form" method="post" action="{{ url_for('site.contact') }}" novalidate>
+    <form class="card form" method="post" action="{{ url_for('site.contact') }}" novalidate
+          {% if web3forms_key %}data-web3forms="{{ web3forms_key }}" data-thanks="{{ url_for('site.contact_thanks') }}"{% endif %}>
       {{ form.hidden_tag() }}
       <h2>{{ c.form_title }}</h2>
       {% if error %}
@@ -22,6 +23,11 @@
         {{ form.name.label }}
         {{ form.name(autocomplete="name", required=True) }}
         {{ field_errors(form.name) }}
+      </div>
+      <div class="field">
+        {{ form.email.label }}
+        {{ form.email(type="email", autocomplete="email", inputmode="email") }}
+        {{ field_errors(form.email) }}
       </div>
       <div class="field">
         {{ form.phone.label }}

@@ -27,6 +27,9 @@ def load_config() -> dict:
         "RESEND_API_KEY": os.environ.get("RESEND_API_KEY", ""),
         "MAIL_FROM": os.environ.get("MAIL_FROM", ""),
         "MAIL_TO": [a.strip() for a in os.environ.get("MAIL_TO", "").split(",") if a.strip()],
+        # Web3Forms. Free plans only accept browser submissions, so the key is
+        # handed to the page and the browser posts the lead. Blank = server path only.
+        "WEB3FORMS_ACCESS_KEY": os.environ.get("WEB3FORMS_ACCESS_KEY", "").strip(),
         # Forms
         "WTF_CSRF_TIME_LIMIT": 60 * 60 * 8,
         "CONTACT_RATE_LIMIT": int(os.environ.get("CONTACT_RATE_LIMIT", "5")),

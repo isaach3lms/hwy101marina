@@ -26,7 +26,8 @@ def send_lead(lead: dict) -> bool:
     body = (
         f"Name: {_clean(lead['name'], 100)}\n"
         f"Phone: {_clean(lead['phone'], 30)}\n"
-        f"Interested in: {interest}\n\n"
+        + (f"Email: {_clean(lead['email'], 120)}\n" if lead.get("email") else "")
+        + f"Interested in: {interest}\n\n"
         f"Question:\n{lead['message'].strip()}\n"
     )
     payload = {

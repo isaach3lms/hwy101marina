@@ -205,6 +205,45 @@ def test_csrf_enforced_when_enabled():
     post.assert_not_called()
 
 
+# ---- web3forms (browser-side delivery) -------------------------------------
+
+def test_web3forms_off_by_default(client):
+    r = client.get("/contact/")
+    html = r.get_data(as_text=True)
+    assert "data-web3forms" not in html
+    assert "api.web3forms.com" not in r.headers["Content-Security-Policy"]
+
+
+def test_web3forms_key_and_csp_when_configured():
+    app = create_app({"TESTING": True, "SECRET_KEY": "t", "WTF_CSRF_ENABLED": False,
+                      "WEB3FORMS_ACCESS_KEY": "key-123"})
+    r = app.test_client().get("/contact/")
+    html = r.get_data(as_text=True)
+    assert 'data-web3forms="key-123"' in html
+    assert 'data-thanks="/contact/thanks/"' in html
+    assert "connect-src 'self' https://api.web3forms.com" in r.headers["Content-Security-Policy"]
+    # Key is only on the contact page.
+    assert "key-123" not in app.test_client().get("/").get_data(as_text=True)
+
+
+def test_contact_email_optional_but_validated(client):
+    ok = client.post("/contact/", data={**GOOD, "email": ""})
+    assert ok.status_code == 302
+    ok = client.post("/contact/", data={**GOOD, "email": "pat@example.com"})
+    assert ok.status_code == 302
+    bad = client.post("/contact/", data={**GOOD, "email": "not-an-email"})
+    assert bad.status_code == 200 and "valid email" in bad.get_data(as_text=True)
+
+
+def test_contact_email_included_in_resend_body():
+    app = create_app({"TESTING": True, "SECRET_KEY": "t", "WTF_CSRF_ENABLED": False,
+                      "RESEND_API_KEY": "re_test", "MAIL_FROM": "a@b.co", "MAIL_TO": ["x@y.co"]})
+    with patch("app.mail.requests.post") as post:
+        post.return_value.status_code = 200
+        app.test_client().post("/contact/", data={**GOOD, "email": "pat@example.com"})
+    assert "Email: pat@example.com" in post.call_args.kwargs["json"]["text"]
+
+
 # ---- config ----------------------------------------------------------------
 
 def test_production_requires_secret_key(monkeypatch):

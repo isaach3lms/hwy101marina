@@ -98,6 +98,7 @@ def contact():
             labels = dict(content.CONTACT["interests"])
             lead = {
                 "name": form.name.data,
+                "email": (form.email.data or "").strip(),
                 "phone": form.phone.data,
                 "interest": form.interest.data,
                 "interest_label": labels[form.interest.data],
