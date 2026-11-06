@@ -1,0 +1,37 @@
+{% macro call_button(site, label=None, style="primary") -%}
+<a class="btn btn-{{ style }}" href="tel:{{ site.phone_tel }}">{{ label or ("Call " ~ site.phone_display) }}</a>
+{%- endmacro %}
+
+{% macro page_hero(title, intro=None) -%}
+<section class="page-hero">
+  <div class="wrap">
+    <h1>{{ title }}</h1>
+    {% if intro %}<p class="lead">{{ intro }}</p>{% endif %}
+  </div>
+</section>
+{%- endmacro %}
+
+{% macro cta_band(site, title, button) -%}
+<section class="cta-band">
+  <div class="wrap">
+    <h2>{{ title }}</h2>
+    {{ call_button(site, button) }}
+  </div>
+</section>
+{%- endmacro %}
+
+{% macro icon_tile(asset, icon, label) -%}
+<span class="icon-tile"><img src="{{ asset('img/icons/' ~ icon) }}" width="40" height="40" alt="" loading="lazy"></span>
+{%- endmacro %}
+
+{% macro photo_grid(asset, photos) -%}
+<ul class="photo-grid" data-lightbox>
+  {% for p in photos %}
+  <li>
+    <button type="button" class="photo-btn" data-full="{{ asset(p.full) }}" data-alt="{{ p.alt }}" aria-label="Open photo {{ loop.index }} of {{ loop.length }}">
+      <img src="{{ asset(p.thumb) }}" width="{{ p.thumb_w }}" height="{{ p.thumb_h }}" alt="{{ p.alt }}" loading="{{ 'eager' if loop.index <= 3 else 'lazy' }}" decoding="async">
+    </button>
+  </li>
+  {% endfor %}
+</ul>
+{%- endmacro %}

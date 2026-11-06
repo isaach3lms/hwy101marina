@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% from "_macros.html" import page_hero, call_button, cta_band, icon_tile %}
+{% block content %}
+{{ page_hero(c.title, c.intro) }}
+
+<section class="section">
+  <div class="wrap">
+    <ul class="boat-grid">
+      {% for b in c.boats %}
+      <li class="boat-card">
+        <img src="{{ asset('img/boats/' ~ b.image) }}" width="900" height="675" alt="{{ b.name }} rental boat at 101 Marina" loading="{{ 'eager' if loop.index <= 2 else 'lazy' }}" decoding="async">
+        <div class="boat-body">
+          <h2>{{ b.name }}</h2>
+          {% if b.note %}<p class="boat-note">{{ b.note }}</p>{% endif %}
+          <ul class="chips">
+            <li>{{ b.hp }} HP</li>
+            <li>{{ b.capacity }} person max</li>
+          </ul>
+          <p class="price"><span class="amt">${{ b.price }}</span><span class="unit">per day + tax</span></p>
+          {{ call_button(site, "Call to book") }}
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="wrap">
+    <h2 class="section-title">{{ c.strip_title }}</h2>
+    <ul class="strip">
+      {% for s in c.strip %}
+      <li>{{ icon_tile(asset, s.icon, s.label) }}<span>{{ s.label }}</span></li>
+      {% endfor %}
+    </ul>
+    <div class="narrow center">
+      <h2>{{ c.needs_title }}</h2>
+      <p>{{ c.needs_body }}</p>
+      <p><a class="btn btn-indigo" href="{{ url_for('site.gallery') }}">{{ c.gallery_button }}</a></p>
+    </div>
+  </div>
+</section>
+
+{{ cta_band(site, c.cta_title, c.cta_button) }}
+{% endblock %}

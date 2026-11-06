@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% from "_macros.html" import page_hero, call_button, cta_band, icon_tile %}
+{% block content %}
+{{ page_hero(c.title) }}
+
+<section class="section">
+  <div class="wrap">
+    <ul class="strip strip-4">
+      {% for f in c.features %}
+      <li>{{ icon_tile(asset, f.icon, f.label) }}<span>{{ f.label }}</span></li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="wrap split">
+    <div>
+      <h2>{{ c.heading }}</h2>
+      <p>{{ c.body }}</p>
+    </div>
+    <div>
+      {% for s in c.sites %}
+      <div class="site-card">
+        <h3>{{ s.name }}</h3>
+        <p class="price"><span class="amt">${{ s.price }}.00</span><span class="unit">{{ s.unit }}</span></p>
+        {{ call_button(site, "Call to book") }}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{{ cta_band(site, c.cta_title, c.cta_button) }}
+{% endblock %}

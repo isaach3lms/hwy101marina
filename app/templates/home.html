@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% from "_macros.html" import call_button, cta_band, icon_tile, photo_grid %}
+{% block content %}
+<section class="hero" style="--hero-image: url('{{ asset('img/hero/hero.jpg') }}')">
+  <div class="wrap hero-inner">
+    <h1>{{ c.hero_title }}</h1>
+    <p class="lead">{{ c.hero_body }}</p>
+    <div class="btn-row">
+      {{ call_button(site) }}
+      <a class="btn btn-ghost" href="{{ url_for('site.rentals') }}">See boat rentals</a>
+    </div>
+    <ul class="hero-facts">
+      {% for f in c.hero_facts %}<li>{{ f }}</li>{% endfor %}
+    </ul>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2 class="section-title">{{ c.tiles_title }}</h2>
+    <div class="tiles">
+      {% for t in c.tiles %}
+      <a class="tile" href="{{ url_for(t.endpoint) }}">
+        {{ icon_tile(asset, t.icon, t.title) }}
+        <h3>{{ t.title }}</h3>
+        <p>{{ t.body }}</p>
+      </a>
+      {% endfor %}
+    </div>
+    <p class="center"><a class="btn btn-primary" href="tel:{{ site.phone_tel }}">Call to book your vacation today</a></p>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="wrap split">
+    <div>
+      <h2>{{ c.needs_title }}</h2>
+      <ul class="checks">
+        {% for n in c.needs %}<li>{{ n }}</li>{% endfor %}
+      </ul>
+    </div>
+    <div>
+      <h2>{{ c.visit_title }}</h2>
+      <p>{{ c.visit_body }}</p>
+      <p><a class="btn btn-indigo" href="{{ url_for('site.store') }}">{{ c.visit_button }}</a></p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <h2 class="section-title">Around the marina</h2>
+    {{ photo_grid(asset, photos) }}
+    <p class="center"><a class="btn btn-indigo" href="{{ url_for('site.gallery') }}">View the full gallery</a></p>
+  </div>
+</section>
+
+{{ cta_band(site, c.cta_title, c.cta_button) }}
+{% endblock %}

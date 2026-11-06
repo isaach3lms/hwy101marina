@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% from "_macros.html" import page_hero, call_button %}
+{% block content %}
+{{ page_hero("We could not find that page", "It may have moved. Try one of the links below or give us a call.") }}
+<section class="section">
+  <div class="wrap center">
+    <p class="btn-row center-row">
+      <a class="btn btn-indigo" href="{{ url_for('site.home') }}">Home</a>
+      <a class="btn btn-indigo" href="{{ url_for('site.rentals') }}">Rentals</a>
+      <a class="btn btn-indigo" href="{{ url_for('site.campground') }}">Campground</a>
+    </p>
+    <p>{{ call_button(site) }}</p>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ page.title }}</title>
+<meta name="description" content="{{ page.description }}">
+<link rel="canonical" href="{{ canonical }}">
+{% if page.noindex %}<meta name="robots" content="noindex, follow">{% else %}<meta name="robots" content="index, follow, max-image-preview:large">{% endif %}
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="{{ site.name }}">
+<meta property="og:title" content="{{ page.title }}">
+<meta property="og:description" content="{{ page.description }}">
+<meta property="og:url" content="{{ canonical }}">
+<meta property="og:image" content="{{ site_url }}{{ url_for('static', filename=brand.og_image) }}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="{{ brand.colors['ink'] }}">
+<link rel="icon" type="image/png" sizes="32x32" href="{{ asset('img/brand/favicon-32.png') }}">
+<link rel="apple-touch-icon" href="{{ asset('img/brand/apple-touch-icon.png') }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="{{ brand.google_fonts_url }}">
+<style>{{ brand_css|safe }}</style>
+<link rel="stylesheet" href="{{ asset('css/site.css') }}">
+{% if schema %}<script type="application/ld+json">{{ schema|tojson }}</script>{% endif %}
+</head>
+<body>
+<a class="skip-link" href="#content">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap header-row">
+    <a class="brand-link" href="{{ url_for('site.home') }}" aria-label="{{ site.name }} home">
+      <img src="{{ asset(brand.logo_small) }}" width="56" height="56" alt="{{ site.name }}, Lake Norfork">
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">
+      <span class="sr-only">Menu</span><span class="bars" aria-hidden="true"></span>
+    </button>
+    <nav id="primary-nav" class="primary-nav" aria-label="Primary">
+      <ul>
+        {% for item in nav %}
+        <li><a href="{{ url_for(item.endpoint) }}"{% if request.endpoint == item.endpoint %} aria-current="page"{% endif %}>{{ item.label }}</a></li>
+        {% endfor %}
+      </ul>
+      <a class="btn btn-call" href="tel:{{ site.phone_tel }}">Call {{ site.phone_display }}</a>
+    </nav>
+  </div>
+</header>
+
+<main id="content">
+{% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div>
+      <img src="{{ asset(brand.logo_small) }}" width="72" height="72" alt="" loading="lazy">
+      <p class="foot-place">{{ site.place_line }}</p>
+      <p><a class="foot-phone" href="tel:{{ site.phone_tel }}">{{ site.phone_display }}</a></p>
+      <p><a href="{{ site.facebook }}" rel="noopener" target="_blank">Find us on Facebook</a></p>
+    </div>
+    <nav aria-label="Footer">
+      <ul>
+        {% for item in nav %}<li><a href="{{ url_for(item.endpoint) }}">{{ item.label }}</a></li>{% endfor %}
+      </ul>
+    </nav>
+  </div>
+  <div class="wrap legal">
+    <span>Copyright &copy; {{ year }} {{ site.legal_name|upper }}</span>
+    <a href="{{ site.credit_url }}" rel="noopener" target="_blank">{{ site.credit_text }}</a>
+  </div>
+</footer>
+
+<script src="{{ asset('js/site.js') }}" defer></script>
+</body>
+</html>

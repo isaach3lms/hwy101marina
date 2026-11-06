@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% from "_macros.html" import page_hero, call_button, photo_grid %}
+{% block content %}
+{{ page_hero(c.title, c.intro) }}
+<section class="section">
+  <div class="wrap">
+    {{ photo_grid(asset, photos) }}
+    <p class="center">{{ call_button(site) }}</p>
+  </div>
+</section>
+{% endblock %}

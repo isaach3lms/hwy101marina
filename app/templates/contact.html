@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% from "_macros.html" import page_hero, call_button %}
+{% macro field_errors(field) -%}
+  {% if field.errors %}<p class="field-error" id="{{ field.id }}-err" role="alert">{{ field.errors[0] }}</p>{% endif %}
+{%- endmacro %}
+{% block content %}
+{{ page_hero(c.title) }}
+
+<section class="section">
+  <div class="wrap split">
+    <form class="card form" method="post" action="{{ url_for('site.contact') }}" novalidate>
+      {{ form.hidden_tag() }}
+      <h2>{{ c.form_title }}</h2>
+      {% if error %}
+      <div class="notice" role="alert">
+        <p>{{ error }}</p>
+        {{ call_button(site) }}
+      </div>
+      {% endif %}
+
+      <div class="field">
+        {{ form.name.label }}
+        {{ form.name(autocomplete="name", required=True) }}
+        {{ field_errors(form.name) }}
+      </div>
+      <div class="field">
+        {{ form.phone.label }}
+        {{ form.phone(type="tel", autocomplete="tel", inputmode="tel", required=True) }}
+        {{ field_errors(form.phone) }}
+      </div>
+      <div class="field">
+        {{ form.interest.label }}
+        {{ form.interest(required=True) }}
+        {{ field_errors(form.interest) }}
+      </div>
+      <div class="field">
+        {{ form.message.label }}
+        {{ form.message(rows=5, required=True) }}
+        {{ field_errors(form.message) }}
+      </div>
+      <div class="hp" aria-hidden="true">
+        <label for="{{ form.website.id }}">Leave this field empty</label>
+        {{ form.website(tabindex="-1", autocomplete="off") }}
+      </div>
+      <button class="btn btn-primary" type="submit">Submit</button>
+    </form>
+
+    <aside>
+      <ol class="steps">
+        {% for s in c.steps %}<li>{{ s }}</li>{% endfor %}
+      </ol>
+      <div class="card callbox">
+        <h3>Rather talk now?</h3>
+        <p>Call us and we will get you booked.</p>
+        {{ call_button(site) }}
+      </div>
+    </aside>
+  </div>
+</section>
+{% endblock %}

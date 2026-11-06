@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% from "_macros.html" import page_hero, cta_band, photo_grid %}
+{% block content %}
+{{ page_hero(c.title, c.intro) }}
+<section class="section">
+  <div class="wrap">
+    {{ photo_grid(asset, photos) }}
+  </div>
+</section>
+{{ cta_band(site, c.cta_title, c.cta_button) }}
+{% endblock %}
