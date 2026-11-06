@@ -17,8 +17,6 @@ SITE = {
     "region": "AR",
     "country": "US",
     "place_line": "Howard Cove, Lake Norfork, Gamaliel, AR",
-    "credit_text": "Site by Between Sundays Consulting",
-    "credit_url": "https://www.betweensundaysconsulting.com",
 }
 
 NAV = [

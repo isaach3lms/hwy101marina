@@ -37,6 +37,11 @@ def test_rental_prices_match_live_site(client):
     assert html.count("per day + tax") == 7
 
 
+def test_footer_has_no_agency_credit(client):
+    for path in PAGES:
+        assert "Site by" not in client.get(path).get_data(as_text=True)
+
+
 def test_campground_price(client):
     html = client.get("/campground/").get_data(as_text=True)
     assert "$20.00" in html and "14 campsites" in html
