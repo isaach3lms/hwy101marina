@@ -37,6 +37,13 @@ def test_rental_prices_match_live_site(client):
     assert html.count("per day + tax") == 7
 
 
+def test_mobile_nav_is_a_side_drawer(client):
+    html = client.get("/").get_data(as_text=True)
+    assert 'class="nav-backdrop"' in html and 'id="primary-nav"' in html
+    css = (ROOT / "app/static/css/site.css").read_text()
+    assert "translateX(100%)" in css
+
+
 def test_footer_has_no_agency_credit(client):
     for path in PAGES:
         assert "Site by" not in client.get(path).get_data(as_text=True)

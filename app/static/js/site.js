@@ -4,18 +4,26 @@
   // Mobile nav
   var toggle = document.querySelector(".nav-toggle");
   var nav = document.getElementById("primary-nav");
+  var backdrop = document.querySelector(".nav-backdrop");
+  function setNav(open) {
+    nav.setAttribute("data-open", open ? "true" : "false");
+    toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    if (backdrop) backdrop.setAttribute("data-open", open ? "true" : "false");
+    document.documentElement.classList.toggle("nav-locked", open);
+  }
   if (toggle && nav) {
     toggle.addEventListener("click", function () {
-      var open = nav.getAttribute("data-open") === "true";
-      nav.setAttribute("data-open", open ? "false" : "true");
-      toggle.setAttribute("aria-expanded", open ? "false" : "true");
+      setNav(nav.getAttribute("data-open") !== "true");
     });
+    if (backdrop) backdrop.addEventListener("click", function () { setNav(false); });
     document.addEventListener("keydown", function (e) {
       if (e.key === "Escape" && nav.getAttribute("data-open") === "true") {
-        nav.setAttribute("data-open", "false");
-        toggle.setAttribute("aria-expanded", "false");
+        setNav(false);
         toggle.focus();
       }
+    });
+    window.matchMedia("(min-width:900px)").addEventListener("change", function (m) {
+      if (m.matches) setNav(false);
     });
   }
 
